@@ -8,7 +8,7 @@ import { getMain } from "@storybook/react-native/scripts/loader.js";
 import { normalizeStories } from "@storybook/core-common";
 import * as glob from "glob";
 import * as path from "path";
-const looksSame = require("looks-same");
+import looksSame from "looks-same";
 import { exec } from "child_process";
 
 // @ts-ignore
@@ -164,25 +164,55 @@ async function GoThroughAllStories() {
     }
   }
 
+  let failures: Array<{
+    story: string;
+    reference: string;
+    current: string;
+    diff: string;
+  }> = [];
+
   for await (const storyPath of storyPaths) {
     const { default: mainExport, ...others } = require(storyPath);
 
     const storyKeys = Object.keys(others);
     for await (const storyKey of storyKeys) {
       const file = `${mainExport.title}-${storyKey}.png`;
-      await looksSame.createDiff({
-        reference: `screenshots/${file}`,
-        current: `screenshots-base/${file}`,
-        diff: `screenshots-diff/${file}`,
-        highlightColor: "#ff00ff", // color to highlight the differences
-        strict: false, // strict comparsion
-        tolerance: 2.5,
-        antialiasingTolerance: 0,
-        ignoreAntialiasing: true, // ignore antialising by default
-        ignoreCaret: true, // ignore caret by default
-      });
+
+      const reference = `screenshots/${file}`;
+      const current = `screenshots-base/${file}`;
+      const diff = `screenshots-diff/${file}`;
+
+      const { equal, diffBounds, diffClusters } = await looksSame(
+        current,
+        reference
+      );
+
+      if (!equal) {
+        await looksSame.createDiff({
+          reference,
+          current,
+          diff,
+          highlightColor: "#ff00ff", // color to highlight the differences
+          strict: false, // strict comparsion
+          tolerance: 2.5,
+          antialiasingTolerance: 0,
+          ignoreAntialiasing: true, // ignore antialising by default
+          ignoreCaret: true, // ignore caret by default
+        });
+
+        failures.push({
+          story: `${mainExport.title}-${storyKey}`,
+          reference,
+          current,
+          diff,
+        });
+      }
     }
   }
+
+  failures.forEach(({ story, ...others }) => {
+    console.log(`${story} failed the test`, others);
+  });
 
   process.exit(0);
 }

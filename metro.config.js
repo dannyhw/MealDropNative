@@ -14,7 +14,11 @@ defaultConfig.transformer.getTransformOptions = async () => ({
   },
 });
 
-defaultConfig.resolver.blockList = exclusionList([/screenshots\/.*/]);
+defaultConfig.resolver.blockList = exclusionList([
+  /screenshots\/.*/,
+  /screenshots-diff\/.*/,
+  /screenshots-base\/.*/,
+]);
 
 defaultConfig.watchFolders = [...defaultConfig.watchFolders, "./.ondevice"];
 
