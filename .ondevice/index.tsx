@@ -1,7 +1,7 @@
 import { getStorybookUI } from "@storybook/react-native";
 import "./doctools";
 import "./storybook.requires";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, StatusBar } from "react-native";
 
 const StorybookUIRoot = getStorybookUI({
   enableWebsockets: true,
@@ -10,6 +10,7 @@ const StorybookUIRoot = getStorybookUI({
 
 const StorybookUI = () => (
   <SafeAreaView style={{ flex: 1 }}>
+    <StatusBar hidden />
     <StorybookUIRoot />
   </SafeAreaView>
 );
