@@ -3,6 +3,7 @@ import type { ComponentMeta, ComponentStoryObj } from "@storybook/react-native";
 import { Badge } from "./Badge";
 
 export default {
+  title: "Badge",
   component: Badge,
   parameters: { flexStart: true },
 } as ComponentMeta<typeof Badge>;

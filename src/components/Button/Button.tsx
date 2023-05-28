@@ -1,6 +1,5 @@
 import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
-
-import { styled } from "nativewind";
+import { tv } from "tailwind-variants";
 
 interface ButtonProps extends TouchableOpacityProps {
   clear: boolean;
@@ -11,7 +10,8 @@ interface ButtonProps extends TouchableOpacityProps {
   text: string;
 }
 
-const Touchable = styled(TouchableOpacity, "items-center justify-center", {
+const touchableClasses = tv({
+  base: "items-center justify-center",
   variants: {
     clear: {
       true: "bg-button-clear",
@@ -43,7 +43,7 @@ const Touchable = styled(TouchableOpacity, "items-center justify-center", {
   ],
 });
 
-const ButtonText = styled(Text, "", {
+const buttonTextClasses = tv({
   variants: {
     clear: {
       true: "text-primary",
@@ -63,14 +63,18 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   return (
-    <Touchable
-      {...{ clear, disabled, large, withIcon, round }}
+    <TouchableOpacity
+      className={touchableClasses({ clear, disabled, large, withIcon, round })}
       activeOpacity={0.7}
       {...props}
     >
-      <ButtonText {...{ clear, disabled, large, withIcon, round }}>
+      <Text
+        className={buttonTextClasses({
+          clear,
+        })}
+      >
         {text}
-      </ButtonText>
-    </Touchable>
+      </Text>
+    </TouchableOpacity>
   );
 };

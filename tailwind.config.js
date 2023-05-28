@@ -1,5 +1,3 @@
-const nativewind = require("nativewind/tailwind");
-
 const baseColors = {
   white: "#FFFFFF ",
   black: "#202020",
@@ -125,6 +123,5 @@ module.exports = {
       textColor,
     },
   },
-  presets: [nativewind],
   plugins: [],
 };

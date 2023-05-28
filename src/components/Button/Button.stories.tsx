@@ -2,6 +2,7 @@ import type { ComponentMeta, ComponentStoryObj } from "@storybook/react-native";
 import { Button } from "./Button";
 
 export default {
+  title: "Button",
   component: Button,
   argTypes: {
     text: { control: "text" },

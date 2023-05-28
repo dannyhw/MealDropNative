@@ -1,5 +1,6 @@
 import { styled } from "nativewind";
 import { Image, Text, View } from "react-native";
+import { tv } from "tailwind-variants";
 
 interface CategoryProps {
   photoUrl: string;
@@ -7,20 +8,17 @@ interface CategoryProps {
   round: boolean;
 }
 
-const Container = styled(
-  View,
-  "flex rounded w-full h-full m-w-[50px] relative",
-  {
-    variants: {
-      round: {
-        true: "flex-column items-center justify-center bg-card max-w-[200] max-h-[200] py-6 px-8",
-        false: "flex-row items-start bg-transparent max-h-[309px]",
-      },
+const containerClasses = tv({
+  base: "flex rounded w-full h-full m-w-[50px] relative",
+  variants: {
+    round: {
+      true: "flex-column items-center justify-center bg-card max-w-[200] max-h-[200] py-6 px-8",
+      false: "flex-row items-start bg-transparent max-h-[309px]",
     },
-  }
-);
+  },
+});
 
-const Img = styled(Image, "", {
+const imgClasses = tv({
   variants: {
     round: {
       true: "rounded-full w-24 h-24",
@@ -29,7 +27,7 @@ const Img = styled(Image, "", {
   },
 });
 
-const Title = styled(Text, "", {
+const titleClasses = tv({
   variants: {
     round: {
       true: "text-primary",
@@ -38,7 +36,7 @@ const Title = styled(Text, "", {
   },
 });
 
-const TitleContainer = styled(View, "", {
+const titleContainerClasses = tv({
   variants: {
     round: {
       true: "pt-4",
@@ -49,11 +47,15 @@ const TitleContainer = styled(View, "", {
 
 export const Category = ({ photoUrl, round = false, title }: CategoryProps) => {
   return (
-    <Container round={round}>
-      <Img round={round} source={{ uri: photoUrl }} resizeMode="cover" />
-      <TitleContainer round={round}>
-        <Title round={round}>{title}</Title>
-      </TitleContainer>
-    </Container>
+    <View className={containerClasses({ round })}>
+      <Image
+        className={imgClasses({ round })}
+        source={{ uri: photoUrl }}
+        resizeMode="cover"
+      />
+      <View className={titleContainerClasses({ round })}>
+        <Text className={titleClasses({ round })}>{title}</Text>
+      </View>
+    </View>
   );
 };
