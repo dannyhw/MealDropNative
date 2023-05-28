@@ -107,11 +107,14 @@ const storyPaths = storiesSpecifiers.reduce((acc, specifier) => {
   return [...acc, ...paths];
 }, [] as string[]);
 
-console.log(storyPaths);
+exec("mkdir screenshots");
+exec("mkdir screenshots-base");
+exec("mkdir screenshots-diff");
+exec("rm -rf screenshots-diff/*.png");
 
 function takeScreenshot(name: string) {
   exec(
-    `mkdir -p screenshots && xcrun simctl io booted screenshot screenshots/${name}.png`,
+    `xcrun simctl io booted screenshot screenshots/${name}.png`,
     (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error.message}`);
@@ -127,13 +130,18 @@ function takeScreenshot(name: string) {
 }
 
 async function GoThroughAllStories() {
+  //wait 500ms
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 500);
+  });
+
   for await (const storyPath of storyPaths) {
     const { default: mainExport, ...others } = require(storyPath);
 
     const storyKeys = Object.keys(others);
 
-    console.log({ mainExport, others: Object.keys(others) });
-    console.log("storykind", mainExport.title);
     if (mainExport.title) {
       for await (const storyKey of storyKeys) {
         console.log("story", mainExport.title, storyKey);
@@ -156,7 +164,7 @@ async function GoThroughAllStories() {
                 takeScreenshot(`${mainExport.title}-${storyKey}`);
                 resolve(true);
               }, 500);
-            }, 2000);
+            }, 1000);
           });
 
         await doit();
@@ -182,10 +190,7 @@ async function GoThroughAllStories() {
       const current = `screenshots-base/${file}`;
       const diff = `screenshots-diff/${file}`;
 
-      const { equal, diffBounds, diffClusters } = await looksSame(
-        current,
-        reference
-      );
+      const { equal } = await looksSame(current, reference);
 
       if (!equal) {
         await looksSame.createDiff({
