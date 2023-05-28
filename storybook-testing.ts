@@ -8,6 +8,7 @@ import { getMain } from "@storybook/react-native/scripts/loader.js";
 import { normalizeStories } from "@storybook/core-common";
 import * as glob from "glob";
 import * as path from "path";
+const looksSame = require("looks-same");
 import { exec } from "child_process";
 
 // @ts-ignore
@@ -110,7 +111,7 @@ console.log(storyPaths);
 
 function takeScreenshot(name: string) {
   exec(
-    `xcrun simctl io booted screenshot screenshots/${name}.png`,
+    `mkdir -p screenshots && xcrun simctl io booted screenshot screenshots/${name}.png`,
     (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error.message}`);
@@ -160,6 +161,26 @@ async function GoThroughAllStories() {
 
         await doit();
       }
+    }
+  }
+
+  for await (const storyPath of storyPaths) {
+    const { default: mainExport, ...others } = require(storyPath);
+
+    const storyKeys = Object.keys(others);
+    for await (const storyKey of storyKeys) {
+      const file = `${mainExport.title}-${storyKey}.png`;
+      await looksSame.createDiff({
+        reference: `screenshots/${file}`,
+        current: `screenshots-base/${file}`,
+        diff: `screenshots-diff/${file}`,
+        highlightColor: "#ff00ff", // color to highlight the differences
+        strict: false, // strict comparsion
+        tolerance: 2.5,
+        antialiasingTolerance: 0,
+        ignoreAntialiasing: true, // ignore antialising by default
+        ignoreCaret: true, // ignore caret by default
+      });
     }
   }
 

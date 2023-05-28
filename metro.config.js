@@ -1,4 +1,5 @@
 const { getDefaultConfig } = require("expo/metro-config");
+const exclusionList = require("metro-config/src/defaults/exclusionList");
 const defaultConfig = getDefaultConfig(__dirname);
 
 defaultConfig.resolver.resolverMainFields = [
@@ -12,6 +13,8 @@ defaultConfig.transformer.getTransformOptions = async () => ({
     inlineRequires: false,
   },
 });
+
+defaultConfig.resolver.blockList = exclusionList([/screenshots\/.*/]);
 
 defaultConfig.watchFolders = [...defaultConfig.watchFolders, "./.ondevice"];
 
