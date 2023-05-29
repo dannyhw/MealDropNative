@@ -17,44 +17,6 @@ const exec: (s: string, f?: Function) => Promise<any> = util.promisify(
   require("child_process").exec
 );
 
-// // @ts-ignore
-// global.__DEV__ = true;
-// // @ts-ignore
-// global.nativeExtensions = {};
-// // @ts-ignore
-// global.__turboModuleProxy = (name) => {
-//   // console.log({ name });
-//   if (name === "Appearance") {
-//     return {
-//       getColorScheme: () => "light",
-//       addListener: (eventName: string) => {},
-//       removeListeners: (count: number) => {},
-//     };
-//   }
-//   if (name === "UIManager" || name === "PlatformConstants") {
-//     return {
-//       getConstants: () => ({}),
-//     };
-//   }
-//   if (name === "DeviceInfo") {
-//     return {
-//       getConstants: () => ({
-//         Dimensions: {
-//           window: {
-//             width: 375,
-//             height: 812,
-//             scale: 1,
-//             fontScale: 1,
-//           },
-//         },
-//       }),
-//     };
-//   }
-//   return () => {};
-// };
-// // @ts-ignore
-// global.RN$Bridgeless = false;
-
 const secured = false;
 const host = "localhost";
 const port = 7007;
@@ -76,7 +38,6 @@ channel.emit(Events.CHANNEL_CREATED, {
 
 const configPath = "./.storybook";
 
-// const storyId = toId("storyKind", "storyName");
 const mainImport = getMain({ configPath });
 const main = mainImport.default ?? mainImport;
 const storiesSpecifiers = normalizeStories(main.stories, {
