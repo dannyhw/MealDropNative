@@ -8,46 +8,52 @@ import { getMain } from "@storybook/react-native/scripts/loader.js";
 import { normalizeStories } from "@storybook/core-common";
 import * as glob from "glob";
 import * as path from "path";
+import * as fs from "fs";
 import looksSame from "looks-same";
-import { exec } from "child_process";
+import { loadCsf } from "@storybook/csf-tools";
+import util from "util";
 
-// @ts-ignore
-global.__DEV__ = true;
-// @ts-ignore
-global.nativeExtensions = {};
-// @ts-ignore
-global.__turboModuleProxy = (name) => {
-  // console.log({ name });
-  if (name === "Appearance") {
-    return {
-      getColorScheme: () => "light",
-      addListener: (eventName: string) => {},
-      removeListeners: (count: number) => {},
-    };
-  }
-  if (name === "UIManager" || name === "PlatformConstants") {
-    return {
-      getConstants: () => ({}),
-    };
-  }
-  if (name === "DeviceInfo") {
-    return {
-      getConstants: () => ({
-        Dimensions: {
-          window: {
-            width: 375,
-            height: 812,
-            scale: 1,
-            fontScale: 1,
-          },
-        },
-      }),
-    };
-  }
-  return () => {};
-};
-// @ts-ignore
-global.RN$Bridgeless = false;
+const exec: (s: string, f?: Function) => Promise<any> = util.promisify(
+  require("child_process").exec
+);
+
+// // @ts-ignore
+// global.__DEV__ = true;
+// // @ts-ignore
+// global.nativeExtensions = {};
+// // @ts-ignore
+// global.__turboModuleProxy = (name) => {
+//   // console.log({ name });
+//   if (name === "Appearance") {
+//     return {
+//       getColorScheme: () => "light",
+//       addListener: (eventName: string) => {},
+//       removeListeners: (count: number) => {},
+//     };
+//   }
+//   if (name === "UIManager" || name === "PlatformConstants") {
+//     return {
+//       getConstants: () => ({}),
+//     };
+//   }
+//   if (name === "DeviceInfo") {
+//     return {
+//       getConstants: () => ({
+//         Dimensions: {
+//           window: {
+//             width: 375,
+//             height: 812,
+//             scale: 1,
+//             fontScale: 1,
+//           },
+//         },
+//       }),
+//     };
+//   }
+//   return () => {};
+// };
+// // @ts-ignore
+// global.RN$Bridgeless = false;
 
 const secured = false;
 const host = "localhost";
@@ -55,7 +61,6 @@ const port = 7007;
 const domain = `${host}:${port}`;
 const absolute = true;
 
-// const { secured, host, port } = options;
 const websocketType = secured ? "wss" : "ws";
 let url = `${websocketType}://${domain}`;
 const channel = createChannel({ url });
@@ -107,15 +112,10 @@ const storyPaths = storiesSpecifiers.reduce((acc, specifier) => {
   return [...acc, ...paths];
 }, [] as string[]);
 
-exec("mkdir screenshots");
-exec("mkdir screenshots-base");
-exec("mkdir screenshots-diff");
-exec("rm -rf screenshots-diff/*.png");
-
-function takeScreenshot(name: string) {
+async function takeScreenshot(name: string) {
   exec(
-    `xcrun simctl io booted screenshot screenshots/${name}.png`,
-    (error, stdout, stderr) => {
+    `xcrun simctl io booted screenshot --type png screenshots/${name}.png`,
+    (error: Error, stdout: string, stderr: string) => {
       if (error) {
         console.log(`error: ${error.message}`);
         return;
@@ -130,40 +130,44 @@ function takeScreenshot(name: string) {
 }
 
 async function GoThroughAllStories() {
-  //wait 500ms
+  await exec("mkdir -p screenshots");
+  await exec("mkdir -p screenshots-base");
+  await exec("mkdir -p screenshots-diff");
+  await exec("rm -rf screenshots-diff/*.png");
+
+  // wait 500ms
   await new Promise((resolve) => {
     setTimeout(() => {
       resolve(true);
     }, 500);
   });
 
-  for await (const storyPath of storyPaths) {
-    const { default: mainExport, ...others } = require(storyPath);
+  const csfStories = storyPaths.map((storyPath) => {
+    const code = fs.readFileSync(storyPath, { encoding: "utf-8" }).toString();
+    return loadCsf(code, {
+      fileName: storyPath,
+      makeTitle: (userTitle) => userTitle,
+    }).parse();
+  });
 
-    const storyKeys = Object.keys(others);
+  for await (const { meta, stories } of csfStories) {
+    if (meta.title) {
+      for await (const { name: storyName } of stories) {
+        console.log("story", meta.title, storyName);
 
-    if (mainExport.title) {
-      for await (const storyKey of storyKeys) {
-        console.log("story", mainExport.title, storyKey);
-
-        const storyId = toId(mainExport.title, storyKey);
+        const storyId = toId(meta.title, storyName);
 
         const doit = () =>
           new Promise((resolve) => {
             setTimeout(() => {
-              console.log(
-                "emitting story",
-                storyId,
-                mainExport.title,
-                storyKey
-              );
+              console.log("emitting story", storyId, meta.title, storyName);
               channel.emit(Events.SET_CURRENT_STORY, { storyId });
 
               // delay 500ms
-              setTimeout(() => {
-                takeScreenshot(`${mainExport.title}-${storyKey}`);
+              setTimeout(async () => {
+                await takeScreenshot(`${meta.title}-${storyName}`);
                 resolve(true);
-              }, 500);
+              }, 1000);
             }, 1000);
           });
 
@@ -179,16 +183,15 @@ async function GoThroughAllStories() {
     diff: string;
   }> = [];
 
-  for await (const storyPath of storyPaths) {
-    const { default: mainExport, ...others } = require(storyPath);
-
-    const storyKeys = Object.keys(others);
-    for await (const storyKey of storyKeys) {
-      const file = `${mainExport.title}-${storyKey}.png`;
+  for await (const { meta, stories } of csfStories) {
+    for await (const { name: storyName } of stories) {
+      const file = `${meta.title}-${storyName}.png`;
 
       const reference = `screenshots/${file}`;
       const current = `screenshots-base/${file}`;
       const diff = `screenshots-diff/${file}`;
+
+      console.log("file", file);
 
       const { equal } = await looksSame(current, reference);
 
@@ -206,7 +209,7 @@ async function GoThroughAllStories() {
         });
 
         failures.push({
-          story: `${mainExport.title}-${storyKey}`,
+          story: `${meta.title}-${storyName}`,
           reference,
           current,
           diff,
