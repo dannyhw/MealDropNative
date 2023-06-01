@@ -22,4 +22,9 @@ defaultConfig.resolver.blockList = exclusionList([
 
 defaultConfig.watchFolders = [...defaultConfig.watchFolders, "./.ondevice"];
 
+defaultConfig.resolver.sourceExts.push("md", "mdx");
+
+defaultConfig.transformer.babelTransformerPath =
+  require.resolve("./transformer.js");
+
 module.exports = defaultConfig;

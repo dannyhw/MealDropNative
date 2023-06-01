@@ -1,5 +1,5 @@
 import type { ComponentStoryObj, ComponentMeta } from "@storybook/react-native";
-
+import Documentation from "./Documentation.mdx";
 import { Category } from "./Category";
 
 export default {
@@ -18,4 +18,8 @@ export const Rounded: ComponentStoryObj<typeof Category> = {
   args: {
     round: true,
   },
+};
+
+export const Docs: ComponentStoryObj<typeof Category> = {
+  render: () => <Documentation />,
 };

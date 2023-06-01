@@ -1,5 +1,6 @@
 import type { ComponentMeta, ComponentStoryObj } from "@storybook/react-native";
 import { Button } from "./Button";
+import Documentation from "./Documentation.mdx";
 
 export default {
   title: "Button",
@@ -36,3 +37,7 @@ export const Clear: ComponentStoryObj<typeof Button> = {
 };
 
 // TODO: icon
+
+export const Docs: ComponentStoryObj<typeof Button> = {
+  render: () => <Documentation />,
+};

@@ -1,0 +1,16 @@
+import { Badge } from "./Badge";
+import { View, Text } from "react-native";
+import * as Stories from "./Badge.stories";
+import { RenderAllStories } from "../RenderAllStories";
+
+# Badge
+
+<View style={{ alignItems: "flex-start" }}>
+  <RenderAllStories StoryExports={Stories} Component={Badge} />
+</View>
+
+# Usage
+
+```tsx
+<Badge text="test" />
+```

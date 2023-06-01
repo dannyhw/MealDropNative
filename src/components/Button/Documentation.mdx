@@ -1,0 +1,23 @@
+import { Button } from "./Button";
+import { View, Text } from "react-native";
+import * as Stories from "./Button.stories";
+import { RenderAllStories } from "../RenderAllStories";
+
+# Button
+
+<View style={{ alignItems: "flex-start" }}>
+  <RenderAllStories StoryExports={Stories} Component={Button} />
+</View>
+
+# Usage
+
+```tsx
+<Button
+  text="bla"
+  disabled={false}
+  clear={false}
+  large={false}
+  withIcon={false}
+  round={false}
+/>
+```
