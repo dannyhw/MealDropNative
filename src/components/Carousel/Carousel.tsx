@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 const data = [
   { text: "1", color: "lightblue" },
@@ -73,9 +73,7 @@ export function Carousel() {
   const offsetX = useSharedValue(0);
   const start = useSharedValue(0);
   const active = useDerivedValue(() => {
-    const i = -Math.round(offsetX.value / (width - 32));
-    console.log({ off: offsetX.value, i });
-    return i;
+    return -Math.round(offsetX.value / (width - 32));
   }, [offsetX]);
 
   const panGesture = Gesture.Pan()
@@ -88,6 +86,7 @@ export function Carousel() {
 
   const animatedStyle = useAnimatedStyle(() => {
     let clamped = offsetX.value;
+
     const limit = -(width - 32) * 2;
 
     if (offsetX.value < limit) {
@@ -115,6 +114,7 @@ export function Carousel() {
           ))}
         </View>
       </GestureDetector>
+
       <View style={{ flexDirection: "row", columnGap: 4 }}>
         {data.map((_, i) => (
           <Dot i={i} active={active} />
