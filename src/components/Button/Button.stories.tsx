@@ -3,7 +3,6 @@ import { Button } from "./Button";
 import Documentation from "./Documentation.mdx";
 
 export default {
-  title: "Button",
   component: Button,
   argTypes: {
     text: { control: "text" },

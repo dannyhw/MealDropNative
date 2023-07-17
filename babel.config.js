@@ -5,6 +5,7 @@ module.exports = function (api) {
     plugins: [
       ["babel-plugin-react-docgen-typescript", { exclude: "node_modules" }],
       "nativewind/babel",
+      "react-native-reanimated/plugin",
     ],
   };
 };

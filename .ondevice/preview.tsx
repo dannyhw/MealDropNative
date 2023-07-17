@@ -4,6 +4,7 @@ import { addDecorator } from "@storybook/react-native";
 import { styled } from "nativewind";
 import addons from "@storybook/addons";
 import { useEffect, useState } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 const Container = styled(View);
 
 type Decorator = Parameters<typeof addDecorator>[0];
@@ -30,12 +31,14 @@ export const decorators: Decorator[] = [
     const { flexStart = false } = parameters || {};
 
     return (
-      <Container
-        className={`p-4 flex-1 ${flexStart ? "items-start" : ""}`}
-        style={{ backgroundColor: background }}
-      >
-        <Story />
-      </Container>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Container
+          className={`p-4 flex-1 ${flexStart ? "items-start" : ""}`}
+          style={{ backgroundColor: background }}
+        >
+          <Story />
+        </Container>
+      </GestureHandlerRootView>
     );
   },
 ];

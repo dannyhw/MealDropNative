@@ -3,7 +3,6 @@ import Documentation from "./Documentation.mdx";
 import { Category } from "./Category";
 
 export default {
-  title: "Category",
   component: Category,
   args: {
     title: "Pizza",
