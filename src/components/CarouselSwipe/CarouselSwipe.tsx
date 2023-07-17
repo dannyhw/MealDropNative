@@ -1,6 +1,10 @@
 import { View, Text, Dimensions, StyleProp, ViewStyle } from "react-native";
 import React from "react";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import {
+  Directions,
+  Gesture,
+  GestureDetector,
+} from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
@@ -71,19 +75,30 @@ export const Dot = ({
   );
 };
 
-export function Carousel() {
-  const offsetX = useSharedValue(0);
-  const start = useSharedValue(0);
-  const active = useDerivedValue(() => {
-    return -Math.round(offsetX.value / CARD_WIDTH);
-  }, [offsetX]);
+export function CarouselSwipe() {
+  const index = useSharedValue(0);
 
-  const panGesture = Gesture.Pan()
-    .onUpdate((e) => {
-      offsetX.value = e.translationX + start.value;
-    })
-    .onEnd(() => {
-      start.value = offsetX.value;
+  const offsetX = useDerivedValue(() => {
+    return -index.value * CARD_WIDTH;
+  }, [index]);
+
+  const flingGestureRight = Gesture.Fling()
+    .direction(Directions.RIGHT)
+    .onStart(() => {
+      console.log({ side: "right", off: offsetX.value });
+      if (index.value > 0) index.value = withTiming(index.value - 1);
+    });
+
+  const flingGestureLeft = Gesture.Fling()
+    .direction(Directions.LEFT)
+    .onStart(() => {
+      console.log({
+        side: "left",
+        off: offsetX.value,
+        limit: CARD_WIDTH * -2,
+        offc: offsetX.value / CARD_WIDTH,
+      });
+      if (index.value < 2) index.value = withTiming(index.value + 1);
     });
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -104,7 +119,9 @@ export function Carousel() {
 
   return (
     <View style={{}}>
-      <GestureDetector gesture={panGesture}>
+      <GestureDetector
+        gesture={Gesture.Exclusive(flingGestureLeft, flingGestureRight)}
+      >
         <View style={{ flexDirection: "row" }}>
           {data.map((item) => (
             <Card
@@ -119,7 +136,7 @@ export function Carousel() {
 
       <View style={{ flexDirection: "row", columnGap: 4 }}>
         {data.map((_, i) => (
-          <Dot key={i} i={i} active={active} />
+          <Dot key={i} i={i} active={index} />
         ))}
       </View>
     </View>
