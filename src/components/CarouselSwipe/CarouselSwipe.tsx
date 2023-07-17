@@ -56,8 +56,8 @@ export const Dot = ({
 }) => {
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      width: withTiming(i === active.value ? 32 : 16),
-      backgroundColor: i === active.value ? "red" : "grey",
+      width: withTiming(i === Math.round(active.value) ? 32 : 16),
+      backgroundColor: i === Math.round(active.value) ? "red" : "grey",
     };
   });
 
@@ -85,19 +85,12 @@ export function CarouselSwipe() {
   const flingGestureRight = Gesture.Fling()
     .direction(Directions.RIGHT)
     .onStart(() => {
-      console.log({ side: "right", off: offsetX.value });
       if (index.value > 0) index.value = withTiming(index.value - 1);
     });
 
   const flingGestureLeft = Gesture.Fling()
     .direction(Directions.LEFT)
     .onStart(() => {
-      console.log({
-        side: "left",
-        off: offsetX.value,
-        limit: CARD_WIDTH * -2,
-        offc: offsetX.value / CARD_WIDTH,
-      });
       if (index.value < 2) index.value = withTiming(index.value + 1);
     });
 
