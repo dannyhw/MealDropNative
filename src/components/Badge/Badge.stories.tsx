@@ -4,6 +4,7 @@ import { Badge } from "./Badge";
 import Documentation from "./Documentation.mdx";
 
 export default {
+  title: "Badge",
   component: Badge,
   parameters: { flexStart: true },
 } as ComponentMeta<typeof Badge>;

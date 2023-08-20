@@ -47,15 +47,12 @@ try {
   argsEnhancers.forEach((enhancer) => addArgsEnhancer(enhancer));
 } catch {}
 
-const getStories = () => {
-  return {
-    "./src/components/Badge/Badge.stories.tsx": require("../src/components/Badge/Badge.stories.tsx"),
-    "./src/components/BottomSheet/BottomSheet.stories.tsx": require("../src/components/BottomSheet/BottomSheet.stories.tsx"),
-    "./src/components/Button/Button.stories.tsx": require("../src/components/Button/Button.stories.tsx"),
-    "./src/components/Carousel/Carousel.stories.tsx": require("../src/components/Carousel/Carousel.stories.tsx"),
-    "./src/components/CarouselSwipe/CarouselSwipe.stories.tsx": require("../src/components/CarouselSwipe/CarouselSwipe.stories.tsx"),
-    "./src/components/Category/Category.stories.tsx": require("../src/components/Category/Category.stories.tsx"),
-  };
-};
+const stories = [
+  require.context(
+    "../src/components",
+    true,
+    /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.stories\.(?:ts|tsx|js|jsx)?)$/
+  ),
+];
 
-configure(getStories, module, false);
+configure(stories, module, false);
