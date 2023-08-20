@@ -13,7 +13,7 @@ export default {
     withIcon: { control: "boolean" },
     round: { control: "boolean" },
   },
-  parameters: { flexStart: true },
+  parameters: { flexStart: true, padding: true },
 } as ComponentMeta<typeof Button>;
 
 export const Basic: ComponentStoryObj<typeof Button> = {

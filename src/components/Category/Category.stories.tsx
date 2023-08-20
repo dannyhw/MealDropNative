@@ -10,6 +10,7 @@ export default {
     photoUrl:
       "https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=550",
   },
+  parameters: { padding: true },
 } as ComponentMeta<typeof Category>;
 
 export const Default: ComponentStoryObj<typeof Category> = {};

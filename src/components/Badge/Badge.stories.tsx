@@ -6,7 +6,7 @@ import Documentation from "./Documentation.mdx";
 export default {
   title: "Badge",
   component: Badge,
-  parameters: { flexStart: true },
+  parameters: { flexStart: true, padding: true },
 } as ComponentMeta<typeof Badge>;
 
 export const Basic: ComponentStoryObj<typeof Badge> = {
