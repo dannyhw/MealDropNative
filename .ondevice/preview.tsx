@@ -28,12 +28,14 @@ export const decorators: Decorator[] = [
       };
     }, [channel]);
 
-    const { flexStart = false } = parameters || {};
+    const { flexStart = false, padding = false } = parameters || {};
 
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Container
-          className={`p-4 flex-1 ${flexStart ? "items-start" : ""}`}
+          className={`${padding ? "p-4" : ""} flex-1 ${
+            flexStart ? "items-start" : ""
+          }`}
           style={{ backgroundColor: background }}
         >
           <Story />
