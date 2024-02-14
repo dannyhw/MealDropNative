@@ -1,8 +1,8 @@
-import type { ComponentStoryObj, ComponentMeta } from "@storybook/react-native";
+import type { StoryObj, Meta } from "@storybook/react";
 import Documentation from "./Documentation.mdx";
 import { Category } from "./Category";
 
-export default {
+const meta = {
   title: "Category",
   component: Category,
   args: {
@@ -11,16 +11,20 @@ export default {
       "https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=550",
   },
   parameters: { padding: true },
-} as ComponentMeta<typeof Category>;
+} satisfies Meta<typeof Category>;
 
-export const Default: ComponentStoryObj<typeof Category> = {};
+export default meta;
 
-export const Rounded: ComponentStoryObj<typeof Category> = {
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {};
+
+export const Rounded: Story = {
   args: {
     round: true,
   },
 };
 
-export const Docs: ComponentStoryObj<typeof Category> = {
+export const Docs: Story = {
   render: () => <Documentation />,
 };

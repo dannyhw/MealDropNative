@@ -2,11 +2,11 @@ import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { tv } from "tailwind-variants";
 
 interface ButtonProps extends TouchableOpacityProps {
-  clear: boolean;
-  large: boolean;
-  withIcon: boolean;
-  disabled: boolean;
-  round: boolean;
+  clear?: boolean;
+  large?: boolean;
+  withIcon?: boolean;
+  disabled?: boolean;
+  round?: boolean;
   text: string;
 }
 
@@ -64,7 +64,9 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       className={touchableClasses({ clear, disabled, large, withIcon, round })}
+      disabled={disabled}
       activeOpacity={0.7}
       {...props}
     >

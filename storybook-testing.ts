@@ -1,6 +1,7 @@
 import "websocket-polyfill";
 import { createChannel } from "@storybook/channel-websocket";
-import { addons } from "@storybook/addons";
+import { addons as managerAddons } from "@storybook/manager-api";
+import { addons as previewAddons } from "@storybook/preview-api";
 import Events from "@storybook/core-events";
 import { toId } from "@storybook/csf";
 // @ts-ignore
@@ -28,7 +29,8 @@ let url = `${websocketType}://${domain}`;
 const channel = createChannel({ url });
 
 //@ts-ignore
-addons.setChannel(channel);
+managerAddons.setChannel(channel);
+previewAddons.setChannel(channel);
 
 channel.emit(Events.CHANNEL_CREATED, {
   host,

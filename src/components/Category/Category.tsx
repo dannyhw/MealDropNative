@@ -5,7 +5,7 @@ import { tv } from "tailwind-variants";
 interface CategoryProps {
   photoUrl: string;
   title: string;
-  round: boolean;
+  round?: boolean;
 }
 
 const containerClasses = tv({

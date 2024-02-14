@@ -1,20 +1,25 @@
-import type { ComponentMeta, ComponentStoryObj } from "@storybook/react-native";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import { Badge } from "./Badge";
 import Documentation from "./Documentation.mdx";
 
-export default {
+const meta = {
   title: "Badge",
   component: Badge,
   parameters: { flexStart: true, padding: true },
-} as ComponentMeta<typeof Badge>;
+} satisfies Meta<typeof Badge>;
 
-export const Basic: ComponentStoryObj<typeof Badge> = {
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Basic: Story = {
   args: {
     text: "Badge",
   },
 };
 
-export const Docs: ComponentStoryObj<typeof Badge> = {
+export const Docs: Story = {
   render: () => <Documentation />,
+  args: { text: "Badge" },
 };
