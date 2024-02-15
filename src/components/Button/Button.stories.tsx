@@ -45,4 +45,7 @@ export const Clear: Story = {
 export const Docs: Story = {
   render: () => <Documentation />,
   args: { text: "Button" },
+  parameters: {
+    deviceOnly: true,
+  },
 };

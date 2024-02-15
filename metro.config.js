@@ -3,6 +3,7 @@ const exclusionList = require("metro-config/src/defaults/exclusionList");
 const defaultConfig = getDefaultConfig(__dirname);
 const path = require("path");
 const { generate } = require("@storybook/react-native/scripts/generate");
+const { withNativeWind } = require("nativewind/metro");
 
 generate({
   configPath: path.resolve(__dirname, "./.ondevice"),
@@ -30,4 +31,6 @@ defaultConfig.transformer.babelTransformerPath =
 
 defaultConfig.transformer.unstable_allowRequireContext = true;
 
-module.exports = defaultConfig;
+module.exports = withNativeWind(defaultConfig, {
+  input: "./.storybook/global.css",
+});

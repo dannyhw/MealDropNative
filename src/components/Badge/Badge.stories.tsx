@@ -22,4 +22,7 @@ export const Basic: Story = {
 export const Docs: Story = {
   render: () => <Documentation />,
   args: { text: "Badge" },
+  parameters: {
+    deviceOnly: true,
+  },
 };
