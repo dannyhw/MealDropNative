@@ -1,11 +1,15 @@
-import { ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 
 import { CarouselSwipe } from "./CarouselSwipe";
 
-export default {
+const meta = {
   title: "Experiments/CarouselSwipe",
   component: CarouselSwipe,
-} as ComponentMeta<typeof CarouselSwipe>;
+} satisfies Meta<typeof CarouselSwipe>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
 
 export const Basic = {
   args: {},

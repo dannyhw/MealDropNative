@@ -1,6 +1,5 @@
-import "websocket-polyfill";
-import { createChannel } from "@storybook/channel-websocket";
-import { addons } from "@storybook/addons";
+import WebSocket from "ws";
+
 import Events from "@storybook/core-events";
 import { toId } from "@storybook/csf";
 // @ts-ignore
@@ -14,7 +13,7 @@ import { loadCsf } from "@storybook/csf-tools";
 import util from "util";
 
 const exec: (s: string, f?: Function) => Promise<any> = util.promisify(
-  require("child_process").exec
+  require("child_process").exec,
 );
 
 const secured = false;
@@ -25,16 +24,18 @@ const absolute = true;
 
 const websocketType = secured ? "wss" : "ws";
 let url = `${websocketType}://${domain}`;
-const channel = createChannel({ url });
 
-//@ts-ignore
-addons.setChannel(channel);
+const ws = new WebSocket("ws://localhost:7007");
+ws.send(
+  JSON.stringify({
+    type: "setCurrentStory",
+    args: [{ viewMode: "story", storyId: "button--basic" }],
+  }),
+);
 
-channel.emit(Events.CHANNEL_CREATED, {
-  host,
-  port,
-  secured,
-});
+ws.onopen = () => {
+  console.log("connected");
+};
 
 const configPath = "./.storybook";
 
@@ -62,7 +63,7 @@ const storyPaths = storiesSpecifiers.reduce((acc, specifier) => {
       const requirePath = absolute
         ? storyPath
         : ensureRelativePathHasDot(
-            path.relative(configPath, pathWithDirectory)
+            path.relative(configPath, pathWithDirectory),
           );
 
       const normalizePathForWindows = (str: string) =>
@@ -86,7 +87,7 @@ async function takeScreenshot(name: string) {
         return;
       }
       console.log(`stdout: ${stdout}`);
-    }
+    },
   );
 }
 
@@ -117,18 +118,24 @@ async function GoThroughAllStories() {
         console.log("story", meta.title, storyName);
 
         const storyId = toId(meta.title, storyName);
-
+        console.log("storyId", storyId);
         const doit = () =>
           new Promise((resolve) => {
             setTimeout(() => {
               console.log("emitting story", storyId, meta.title, storyName);
-              channel.emit(Events.SET_CURRENT_STORY, { storyId });
 
+              ws.send(
+                JSON.stringify({
+                  type: "setCurrentStory",
+                  args: [{ viewMode: "story", storyId: storyId }],
+                }),
+              );
               // delay 500ms
               setTimeout(async () => {
                 await takeScreenshot(`${meta.title}-${storyName}`);
                 resolve(true);
               }, 1000);
+              resolve(true);
             }, 1000);
           });
 

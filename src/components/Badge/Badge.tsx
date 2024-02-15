@@ -2,7 +2,7 @@ import { StyleProp, Text, TextStyle, View } from "react-native";
 
 interface BadgeProps {
   text: string;
-  style: StyleProp<TextStyle>;
+  style?: StyleProp<TextStyle>;
 }
 
 export const Badge = ({ text, style }: BadgeProps) => {
