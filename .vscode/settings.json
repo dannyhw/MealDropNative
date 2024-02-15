@@ -1,10 +1,17 @@
 {
   "tailwindCSS.experimental.classRegex": [
     [
-      "tv\\([^,)]+,([^)]*)\\)",
-      "styled\\([^,)]+,([^)]*)\\)",
-      "[\"'`]([^\"'`]*).*?[\"'`]"
+      ["tv\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+      ["tv\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
     ]
   ],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "tw",
+    ".*Style",
+    "color",
+    "backgroundColor"
+  ]
 }

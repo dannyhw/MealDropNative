@@ -12,10 +12,9 @@
     "storybook:web": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "storybook-generate": "sb-rn-get-stories --config-path .ondevice",
-    "storybook": "sb-rn-get-stories --config-path .ondevice && STORYBOOK_ENABLED='true' expo start",
-    "storybook:ios": "sb-rn-get-stories --config-path .ondevice && STORYBOOK_ENABLED='true' expo start --ios",
-    "storybook:android": "sb-rn-get-stories --config-path .ondevice && STORYBOOK_ENABLED='true' expo start --android",
-    "storybook-testing-old": "node -r ./babel-register.js storybook-testing.ts",
+    "storybook": "STORYBOOK_ENABLED='true' expo start",
+    "storybook:ios": "STORYBOOK_ENABLED='true' expo start --ios",
+    "storybook:android": "STORYBOOK_ENABLED='true' expo start --android",
     "storybook-testing": "ts-node storybook-testing.ts"
   },
   "dependencies": {
@@ -34,7 +33,7 @@
     "react-native-reanimated": "~3.6.2",
     "react-native-safe-area-context": "4.8.2",
     "react-native-web": "~0.19.10",
-    "tailwind-variants": "^0.1.5"
+    "tailwind-variants": "^0.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.1",
@@ -63,13 +62,14 @@
     "babel-plugin-react-docgen-typescript": "^1.5.1",
     "babel-plugin-react-native-web": "^0.18.10",
     "looks-same": "^8.1.0",
-    "prettier": "^3.0.0",
+    "prettier": "^3.2.5",
     "storybook": "^7.6.15",
     "tailwindcss": "3.3.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.0",
     "websocket-polyfill": "^0.0.3",
-    "glob": "^10.3.10"
+    "glob": "^10.3.10",
+    "prettier-plugin-tailwindcss": "^0.5.11"
   },
   "resolutions": {
     "react-docgen-typescript": "2.2.2"
