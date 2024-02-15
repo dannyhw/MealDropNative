@@ -72,7 +72,9 @@
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "postcss-loader": "^8.1.0",
     "autoprefixer": "^10.4.17",
-    "@react-native/babel-preset": "^0.73.21"
+    "@react-native/babel-preset": "^0.73.21",
+    "ws": "^8.16.0",
+    "@types/ws": "^8.5.10"
   },
   "resolutions": {
     "react-docgen-typescript": "2.2.2"

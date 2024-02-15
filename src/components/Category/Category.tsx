@@ -1,4 +1,3 @@
-import { styled } from "nativewind";
 import { Image, Text, View } from "react-native";
 import { tv } from "tailwind-variants";
 

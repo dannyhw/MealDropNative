@@ -1,7 +1,5 @@
-import "websocket-polyfill";
-import { Channel, WebsocketTransport } from "@storybook/channels";
-import { addons as managerAddons } from "@storybook/manager-api";
-import { addons as previewAddons } from "@storybook/preview-api";
+import WebSocket from "ws";
+
 import Events from "@storybook/core-events";
 import { toId } from "@storybook/csf";
 // @ts-ignore
@@ -27,27 +25,17 @@ const absolute = true;
 const websocketType = secured ? "wss" : "ws";
 let url = `${websocketType}://${domain}`;
 
-const channel = new Channel({
-  transport: new WebsocketTransport({
-    url,
-    onError: (e) => {
-      console.log(`WebsocketTransport error ${JSON.stringify(e)}`);
-      process.exit(1);
-    },
+const ws = new WebSocket("ws://localhost:7007");
+ws.send(
+  JSON.stringify({
+    type: "setCurrentStory",
+    args: [{ viewMode: "story", storyId: "button--basic" }],
   }),
-  async: true,
-});
-// const channel = createChannel({ url });
+);
 
-//@ts-ignore
-managerAddons.setChannel(channel);
-previewAddons.setChannel(channel);
-
-channel.emit(Events.CHANNEL_CREATED, {
-  host,
-  port,
-  secured,
-});
+ws.onopen = () => {
+  console.log("connected");
+};
 
 const configPath = "./.storybook";
 
@@ -135,13 +123,18 @@ async function GoThroughAllStories() {
           new Promise((resolve) => {
             setTimeout(() => {
               console.log("emitting story", storyId, meta.title, storyName);
-              channel.emit(Events.SET_CURRENT_STORY, { storyId });
 
+              ws.send(
+                JSON.stringify({
+                  type: "setCurrentStory",
+                  args: [{ viewMode: "story", storyId: storyId }],
+                }),
+              );
               // delay 500ms
-              // setTimeout(async () => {
-              //   await takeScreenshot(`${meta.title}-${storyName}`);
-              //   resolve(true);
-              // }, 1000);
+              setTimeout(async () => {
+                await takeScreenshot(`${meta.title}-${storyName}`);
+                resolve(true);
+              }, 1000);
               resolve(true);
             }, 1000);
           });
@@ -151,53 +144,53 @@ async function GoThroughAllStories() {
     }
   }
 
-  // let failures: Array<{
-  //   story: string;
-  //   reference: string;
-  //   current: string;
-  //   diff: string;
-  // }> = [];
+  let failures: Array<{
+    story: string;
+    reference: string;
+    current: string;
+    diff: string;
+  }> = [];
 
-  // for await (const { meta, stories } of csfStories) {
-  //   for await (const { name: storyName } of stories) {
-  //     const file = `${meta.title}-${storyName}.png`;
+  for await (const { meta, stories } of csfStories) {
+    for await (const { name: storyName } of stories) {
+      const file = `${meta.title}-${storyName}.png`;
 
-  //     const reference = `screenshots/${file}`;
-  //     const current = `screenshots-base/${file}`;
-  //     const diff = `screenshots-diff/${file}`;
+      const reference = `screenshots/${file}`;
+      const current = `screenshots-base/${file}`;
+      const diff = `screenshots-diff/${file}`;
 
-  //     console.log("file", file);
+      console.log("file", file);
 
-  //     const { equal } = await looksSame(current, reference);
+      const { equal } = await looksSame(current, reference);
 
-  //     if (!equal) {
-  //       await looksSame.createDiff({
-  //         reference,
-  //         current,
-  //         diff,
-  //         highlightColor: "#ff00ff", // color to highlight the differences
-  //         strict: false, // strict comparsion
-  //         tolerance: 2.5,
-  //         antialiasingTolerance: 0,
-  //         ignoreAntialiasing: true, // ignore antialising by default
-  //         ignoreCaret: true, // ignore caret by default
-  //       });
+      if (!equal) {
+        await looksSame.createDiff({
+          reference,
+          current,
+          diff,
+          highlightColor: "#ff00ff", // color to highlight the differences
+          strict: false, // strict comparsion
+          tolerance: 2.5,
+          antialiasingTolerance: 0,
+          ignoreAntialiasing: true, // ignore antialising by default
+          ignoreCaret: true, // ignore caret by default
+        });
 
-  //       failures.push({
-  //         story: `${meta.title}-${storyName}`,
-  //         reference,
-  //         current,
-  //         diff,
-  //       });
-  //     }
-  //   }
-  // }
+        failures.push({
+          story: `${meta.title}-${storyName}`,
+          reference,
+          current,
+          diff,
+        });
+      }
+    }
+  }
 
-  // failures.forEach(({ story, ...others }) => {
-  //   console.log(`${story} failed the test`, others);
-  // });
+  failures.forEach(({ story, ...others }) => {
+    console.log(`${story} failed the test`, others);
+  });
 
-  // process.exit(0);
+  process.exit(0);
 }
 
 GoThroughAllStories();

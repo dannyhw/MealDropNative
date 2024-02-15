@@ -52,17 +52,16 @@ const main: ServerStorybookConfig = {
           },
         },
       ],
-      include: [
-        path.resolve(__dirname, "../stories/nativewind"),
-        path.resolve(__dirname, "./"),
-      ],
+      include: [path.resolve(__dirname, "preview.tsx")],
     });
     return config;
   },
-
+  logLevel: "debug",
   framework: {
     name: "@storybook/react-webpack5",
-    options: {},
+    options: {
+      builder: { useSWC: true },
+    },
   },
 
   reactNativeServerOptions: {
