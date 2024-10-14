@@ -1,4 +1,5 @@
-export default ({ config }) => ({
+import { ConfigContext, ExpoConfig } from "expo/config";
+const expoConfig = ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "MealDropNative",
   slug: "expo-template-blank-typescript",
@@ -30,3 +31,5 @@ export default ({ config }) => ({
     favicon: "./assets/favicon.png",
   },
 });
+
+export default expoConfig;

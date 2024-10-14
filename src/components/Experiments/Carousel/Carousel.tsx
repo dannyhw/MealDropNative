@@ -55,7 +55,7 @@ export const Dot = ({
       width: withTiming(i === active.value ? 32 : 16),
       backgroundColor: i === active.value ? "red" : "grey",
     };
-  });
+  }, [active.value, i]);
 
   return (
     <Animated.View

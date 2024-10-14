@@ -1,16 +1,14 @@
-import { StyleProp, Text, TextStyle, View } from "react-native";
+import { Text, View } from "react-native";
 
 interface BadgeProps {
   text: string;
-  style: StyleProp<TextStyle>;
+  className?: string;
 }
 
-export const Badge = ({ text, style }: BadgeProps) => {
+export const Badge = ({ text, className }: BadgeProps) => {
   return (
-    <View className="py-[3px] px-2 rounded bg-badge">
-      <Text className="capitalize text-badge" style={style}>
-        {text}
-      </Text>
+    <View className="self-start rounded bg-badge px-2 py-[3px]">
+      <Text className={`capitalize text-badge ${className}`}>{text}</Text>
     </View>
   );
 };

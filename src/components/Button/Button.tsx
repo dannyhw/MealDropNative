@@ -2,23 +2,23 @@ import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { tv } from "tailwind-variants";
 
 interface ButtonProps extends TouchableOpacityProps {
-  clear: boolean;
-  large: boolean;
-  withIcon: boolean;
-  disabled: boolean;
-  round: boolean;
+  clear?: boolean;
+  large?: boolean;
+  withIcon?: boolean;
+  disabled?: boolean;
+  round?: boolean;
   text: string;
 }
 
 const touchableClasses = tv({
-  base: "items-center justify-center",
+  base: "items-center justify-center self-start",
   variants: {
     clear: {
       true: "bg-button-clear",
       false: "bg-button-primary",
     },
     large: {
-      true: "py-5 px-4",
+      true: "px-4 py-5",
       false: "",
     },
     round: {
@@ -38,7 +38,7 @@ const touchableClasses = tv({
     {
       large: false,
       withIcon: false,
-      className: "py-3.5 px-4",
+      className: "px-4 py-3.5",
     },
   ],
 });
@@ -64,7 +64,9 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       className={touchableClasses({ clear, disabled, large, withIcon, round })}
+      disabled={disabled}
       activeOpacity={0.7}
       {...props}
     >

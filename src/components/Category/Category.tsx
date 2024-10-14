@@ -1,19 +1,18 @@
-import { styled } from "nativewind";
 import { Image, Text, View } from "react-native";
 import { tv } from "tailwind-variants";
 
 interface CategoryProps {
   photoUrl: string;
   title: string;
-  round: boolean;
+  round?: boolean;
 }
 
 const containerClasses = tv({
-  base: "flex rounded w-full h-full m-w-[50px] relative",
+  base: "m-w-[50px] relative flex h-full w-full rounded",
   variants: {
     round: {
-      true: "flex-column items-center justify-center bg-card max-w-[200] max-h-[200] py-6 px-8",
-      false: "flex-row items-start bg-transparent max-h-[309px]",
+      true: "flex-column max-h-[200] max-w-[200] items-center justify-center bg-card px-8 py-6",
+      false: "max-h-[309px] flex-row items-start bg-transparent",
     },
   },
 });
@@ -21,8 +20,8 @@ const containerClasses = tv({
 const imgClasses = tv({
   variants: {
     round: {
-      true: "rounded-full w-24 h-24",
-      false: "rounded w-full h-full min-w-[50px] min-h-[50px] max-h-[300px]",
+      true: "h-24 w-24 rounded-full",
+      false: "h-full max-h-[300px] min-h-[50px] w-full min-w-[50px] rounded",
     },
   },
 });
@@ -40,7 +39,7 @@ const titleContainerClasses = tv({
   variants: {
     round: {
       true: "pt-4",
-      false: "absolute top-6 left-6 rounded bg-other-black py-2 px-4",
+      false: "absolute left-6 top-6 rounded bg-other-black px-4 py-2",
     },
   },
 });

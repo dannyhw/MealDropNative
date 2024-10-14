@@ -1,12 +1,26 @@
-import { ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 
 import { Carousel } from "./Carousel";
+import { View } from "react-native";
 
-export default {
+const meta = {
   title: "Experiments/Carousel",
   component: Carousel,
-} as ComponentMeta<typeof Carousel>;
+  decorators: [
+    (Story) => {
+      return (
+        <View className="max-w-full overflow-hidden">
+          <Story />
+        </View>
+      );
+    },
+  ],
+} satisfies Meta<typeof Carousel>;
 
-export const Basic = {
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Basic: Story = {
   args: {},
 };
