@@ -59,7 +59,7 @@ export const Dot = ({
       width: withTiming(i === Math.round(active.value) ? 32 : 16),
       backgroundColor: i === Math.round(active.value) ? "red" : "grey",
     };
-  });
+  }, [active.value, i]);
 
   return (
     <Animated.View
