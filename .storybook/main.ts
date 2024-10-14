@@ -9,7 +9,6 @@ const main: ServerStorybookConfig = {
   stories: ["../src/components/**/*.stories.?(ts|tsx|js|jsx)"],
 
   addons: [
-    "@storybook/addon-webpack5-compiler-swc",
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-react-native-server",
