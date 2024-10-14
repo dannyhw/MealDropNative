@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Badge } from "./Badge";
 import Documentation from "./Documentation.mdx";
+import { Platform } from "react-native";
 
 const meta = {
   title: "Badge",
@@ -20,7 +21,9 @@ export const Basic: Story = {
 };
 
 export const Docs: Story = {
-  render: () => <Documentation />,
+  render: () => {
+    return <Documentation />;
+  },
   args: { text: "Badge" },
   parameters: {
     deviceOnly: true,

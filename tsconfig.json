@@ -2,13 +2,19 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "typeRoots": ["./global.d.ts", "my-app.d.ts"]
+    "typeRoots": [
+      "./global.d.ts",
+      "my-app.d.ts"
+    ],
+    "jsxImportSource": "nativewind",
+    "jsx": "react-jsx"
   },
   "include": [
     "my-app.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "./.ondevice",
-    "./.storybook"
+    "./.storybook",
+    "nativewind-env.d.ts"
   ]
 }

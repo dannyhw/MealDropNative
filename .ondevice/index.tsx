@@ -3,7 +3,7 @@ import { view } from "./storybook.requires";
 // import { SafeAreaView, StatusBar } from "react-native";
 
 const StorybookUIRoot = view.getStorybookUI({
-  enableWebsockets: true,
+  enableWebsockets: false,
   onDeviceUI: true,
   storage: {
     getItem: AsyncStorage.getItem,

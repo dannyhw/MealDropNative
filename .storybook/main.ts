@@ -11,13 +11,38 @@ const main: ServerStorybookConfig = {
     "../src/components/**/*.stories.?(ts|tsx|js|jsx)",
   ],
 
-  babel: async (options) => {
+  babelDefault: async (options) => {
     return options;
   },
 
   addons: [
+    "@storybook/addon-webpack5-compiler-swc",
     "@storybook/addon-links",
     "@storybook/addon-essentials",
+    "@storybook/addon-react-native-server",
+    // {
+    //   name: "@storybook/addon-styling-webpack",
+    //   options: {
+    //     rules: [
+    //       // Replaces existing CSS rules to support PostCSS
+    //       {
+    //         test: /\.css$/,
+    //         use: [
+    //           "style-loader",
+    //           {
+    //             loader: "css-loader",
+    //             options: { importLoaders: 1 },
+    //           },
+    //           {
+    //             // Gets options from `postcss.config.js` in your project root
+    //             loader: "postcss-loader",
+    //             options: { implementation: require.resolve("postcss") },
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   },
+    // },
     {
       name: "@storybook/addon-react-native-web",
       options: {
@@ -27,16 +52,18 @@ const main: ServerStorybookConfig = {
           "nativewind",
           "react-native-css-interop",
         ],
-        babelPresets: ["nativewind/babel"],
-        babelPresetReactOptions: { jsxImportSource: "nativewind" },
+        // babelPresets: ["nativewind/babel"],
+        babelPresetReactOptions: {
+          jsxImportSource: "nativewind",
+          // runtime: "automatic",
+        },
         babelPlugins: [
-          // "@babel/plugin-proposal-export-namespace-from",
+          "@babel/plugin-proposal-export-namespace-from",
           ["@babel/plugin-transform-class-properties", { loose: true }],
           "react-native-reanimated/plugin",
         ],
       },
     },
-    "@storybook/addon-react-native-server",
   ],
 
   webpackFinal: async (config) => {
@@ -52,15 +79,20 @@ const main: ServerStorybookConfig = {
           },
         },
       ],
-      include: [path.resolve(__dirname, "preview.tsx")],
+      include: [
+        path.resolve(__dirname, "preview.tsx"),
+        path.resolve(__dirname, "../src/"),
+      ],
     });
     return config;
   },
+
   logLevel: "debug",
+
   framework: {
     name: "@storybook/react-webpack5",
     options: {
-      builder: { useSWC: true },
+      fastRefresh: true,
     },
   },
 
@@ -69,9 +101,34 @@ const main: ServerStorybookConfig = {
     port: 7007,
   },
 
-  docs: {
-    autodocs: false,
+  // docs: {},
+
+  // typescript: {
+  //   reactDocgen: "react-docgen-typescript",
+  // },
+  typescript: {
+    check: false,
+    checkOptions: {},
+    reactDocgen: "react-docgen-typescript",
+    reactDocgenTypescriptOptions: {
+      // speeds up storybook build time
+      // @ts-ignore
+      allowSyntheticDefaultImports: false,
+      // speeds up storybook build time
+      esModuleInterop: false,
+      // makes union prop types like variant and size appear as select controls
+      shouldExtractLiteralValuesFromEnum: true,
+      // makes string and boolean types that can be undefined appear as inputs and switches
+      shouldRemoveUndefinedFromOptional: true,
+      compilerOptions: {
+        jsxImportSource: "nativewind",
+      },
+      include: ["../src/**/*.ts", "../src/**/*.tsx"],
+    },
   },
+  // typescript: {
+  //   reactDocgen: false,
+  // },
 };
 
 export default main;

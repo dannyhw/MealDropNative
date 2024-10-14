@@ -1,6 +1,7 @@
 import type { StoryObj, Meta } from "@storybook/react";
 import Documentation from "./Documentation.mdx";
 import { Category } from "./Category";
+import { Platform } from "react-native";
 
 const meta = {
   title: "Category",
@@ -29,5 +30,7 @@ export const Docs: Story = {
   parameters: {
     deviceOnly: true,
   },
-  render: () => <Documentation />,
+  render: () => {
+    return <Documentation />;
+  },
 };

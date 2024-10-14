@@ -125,5 +125,5 @@ module.exports = {
       textColor,
     },
   },
-  plugins: [],
+  // plugins: [],
 };

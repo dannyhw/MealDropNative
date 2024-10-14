@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "./Button";
 import Documentation from "./Documentation.mdx";
+import { Platform } from "react-native";
 
 const meta = {
   title: "Button",
@@ -43,7 +44,9 @@ export const Clear: Story = {
 // TODO: icon
 
 export const Docs: Story = {
-  render: () => <Documentation />,
+  render: () => {
+    return <Documentation />;
+  },
   args: { text: "Button" },
   parameters: {
     deviceOnly: true,
