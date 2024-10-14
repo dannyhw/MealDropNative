@@ -78,7 +78,7 @@
     "websocket-polyfill": "^0.0.3",
     "ws": "^8.16.0"
   },
-  "resolutions": {
+  "overrides": {
     "react-docgen-typescript": "2.2.2"
   },
   "private": true,
