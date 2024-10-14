@@ -1,10 +1,9 @@
 import WebSocket from "ws";
-
-import Events from "@storybook/core-events";
+import Events from "@storybook/core/core-events";
 import { toId } from "@storybook/csf";
 // @ts-ignore
 import { getMain } from "@storybook/react-native/scripts/loader.js";
-import { normalizeStories } from "@storybook/core-common";
+import { normalizeStories } from "@storybook/core/common";
 import * as glob from "glob";
 import * as path from "path";
 import * as fs from "fs";
