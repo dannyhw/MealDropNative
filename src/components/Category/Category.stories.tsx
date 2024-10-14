@@ -1,7 +1,7 @@
 import type { StoryObj, Meta } from "@storybook/react";
 import Documentation from "./Documentation.mdx";
 import { Category } from "./Category";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 
 const meta = {
   title: "Category",
@@ -12,6 +12,15 @@ const meta = {
       "https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=550",
   },
   parameters: { padding: true },
+  decorators: [
+    (Story) => {
+      return (
+        <View className="web:h-96 web:max-w-md">
+          <Story />
+        </View>
+      );
+    },
+  ],
 } satisfies Meta<typeof Category>;
 
 export default meta;

@@ -2,12 +2,11 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "typeRoots": [
-      "./global.d.ts",
-      "my-app.d.ts"
-    ],
+    "typeRoots": ["./global.d.ts", "my-app.d.ts"],
     "jsxImportSource": "nativewind",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "moduleResolution": "Bundler",
+    "module": "ES2022"
   },
   "include": [
     "my-app.d.ts",

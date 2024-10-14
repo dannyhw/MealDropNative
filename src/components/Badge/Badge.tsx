@@ -7,7 +7,7 @@ interface BadgeProps {
 
 export const Badge = ({ text, className }: BadgeProps) => {
   return (
-    <View className="rounded bg-badge px-2 py-[3px]">
+    <View className="self-start rounded bg-badge px-2 py-[3px]">
       <Text className={`capitalize text-badge ${className}`}>{text}</Text>
     </View>
   );

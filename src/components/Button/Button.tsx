@@ -11,14 +11,14 @@ interface ButtonProps extends TouchableOpacityProps {
 }
 
 const touchableClasses = tv({
-  base: "items-center justify-center",
+  base: "items-center justify-center self-start",
   variants: {
     clear: {
       true: "bg-button-clear",
       false: "bg-button-primary",
     },
     large: {
-      true: "py-5 px-4",
+      true: "px-4 py-5",
       false: "",
     },
     round: {
@@ -38,7 +38,7 @@ const touchableClasses = tv({
     {
       large: false,
       withIcon: false,
-      className: "py-3.5 px-4",
+      className: "px-4 py-3.5",
     },
   ],
 });
