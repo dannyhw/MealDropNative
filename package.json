@@ -82,5 +82,6 @@
   "resolutions": {
     "react-docgen-typescript": "2.2.2"
   },
-  "private": true
+  "private": true,
+  "packageManager": "bun@1.1.30"
 }
