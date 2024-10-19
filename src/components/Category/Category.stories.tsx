@@ -28,6 +28,7 @@ export const Rounded: Story = {
 export const Docs: Story = {
   parameters: {
     deviceOnly: true,
+    padding: false,
   },
   render: () => {
     return <Documentation />;
