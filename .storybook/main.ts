@@ -11,7 +11,7 @@ const main: ServerStorybookConfig = {
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
-    "@storybook/addon-react-native-server",
+    // "@storybook/addon-react-native-server",
   ],
 
   logLevel: "debug",

@@ -9,32 +9,9 @@ import * as path from "path";
 import * as fs from "fs";
 import looksSame from "looks-same";
 import { loadCsf } from "@storybook/csf-tools";
-import util from "util";
+import { execSync } from "child_process";
 
-const exec: (s: string, f?: Function) => Promise<any> = util.promisify(
-  require("child_process").exec,
-);
-
-const secured = false;
-const host = "localhost";
-const port = 7007;
-const domain = `${host}:${port}`;
 const absolute = true;
-
-const websocketType = secured ? "wss" : "ws";
-let url = `${websocketType}://${domain}`;
-
-const ws = new WebSocket("ws://localhost:7007");
-ws.send(
-  JSON.stringify({
-    type: "setCurrentStory",
-    args: [{ viewMode: "story", storyId: "button--basic" }],
-  }),
-);
-
-ws.onopen = () => {
-  console.log("connected");
-};
 
 const configPath = "./.storybook";
 
@@ -74,27 +51,16 @@ const storyPaths = storiesSpecifiers.reduce((acc, specifier) => {
 }, [] as string[]);
 
 async function takeScreenshot(name: string) {
-  exec(
+  execSync(
     `xcrun simctl io booted screenshot --type png screenshots/${name}.png`,
-    (error: Error, stdout: string, stderr: string) => {
-      if (error) {
-        console.log(`error: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
-    },
   );
 }
 
 async function GoThroughAllStories() {
-  await exec("mkdir -p screenshots");
-  await exec("mkdir -p screenshots-base");
-  await exec("mkdir -p screenshots-diff");
-  await exec("rm -rf screenshots-diff/*.png");
+  execSync("mkdir -p screenshots");
+  execSync("mkdir -p screenshots-base");
+  execSync("mkdir -p screenshots-diff");
+  execSync("rm -rf screenshots-diff/*.png");
 
   // wait 500ms
   await new Promise((resolve) => {
@@ -143,6 +109,8 @@ async function GoThroughAllStories() {
     }
   }
 
+  console.log("done step 1");
+
   let failures: Array<{
     story: string;
     reference: string;
@@ -150,6 +118,7 @@ async function GoThroughAllStories() {
     diff: string;
   }> = [];
 
+  console.log("start step 2");
   for await (const { meta, stories } of csfStories) {
     for await (const { name: storyName } of stories) {
       const file = `${meta.title}-${storyName}.png`;
@@ -160,21 +129,31 @@ async function GoThroughAllStories() {
 
       console.log("file", file);
 
-      const { equal } = await looksSame(current, reference);
+      try {
+        const { equal } = await looksSame(current, reference);
 
-      if (!equal) {
-        await looksSame.createDiff({
-          reference,
-          current,
-          diff,
-          highlightColor: "#ff00ff", // color to highlight the differences
-          strict: false, // strict comparsion
-          tolerance: 2.5,
-          antialiasingTolerance: 0,
-          ignoreAntialiasing: true, // ignore antialising by default
-          ignoreCaret: true, // ignore caret by default
-        });
+        if (!equal) {
+          await looksSame.createDiff({
+            reference,
+            current,
+            diff,
+            highlightColor: "#ff00ff", // color to highlight the differences
+            strict: false, // strict comparsion
+            tolerance: 2.5,
+            antialiasingTolerance: 0,
+            ignoreAntialiasing: true, // ignore antialising by default
+            ignoreCaret: true, // ignore caret by default
+          });
 
+          failures.push({
+            story: `${meta.title}-${storyName}`,
+            reference,
+            current,
+            diff,
+          });
+        }
+      } catch (error) {
+        console.log("error", error);
         failures.push({
           story: `${meta.title}-${storyName}`,
           reference,
@@ -192,4 +171,15 @@ async function GoThroughAllStories() {
   process.exit(0);
 }
 
-GoThroughAllStories();
+const ws = new WebSocket("ws://localhost:7007");
+
+ws.onopen = () => {
+  console.log("connected");
+  ws.send(
+    JSON.stringify({
+      type: "setCurrentStory",
+      args: [{ viewMode: "story", storyId: "button--basic" }],
+    }),
+  );
+  GoThroughAllStories();
+};

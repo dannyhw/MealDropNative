@@ -31,5 +31,9 @@ module.exports = withStorybook(
   }),
   {
     configPath: path.resolve(__dirname, ".ondevice"),
+    websockets: {
+      port: 7007,
+      host: "localhost",
+    },
   },
 );
