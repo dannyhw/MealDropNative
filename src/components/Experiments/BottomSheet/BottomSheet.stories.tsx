@@ -1,10 +1,10 @@
-import { Meta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 
 import { BottomSheet, BottomSheetRef } from "./BottomSheet";
-import { Text, Touchable, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useRef } from "react";
 
-export default {
+const meta = {
   title: "Experiments/BottomSheet",
   component: BottomSheet,
   render: (args) => {
@@ -24,6 +24,10 @@ export default {
   },
 } satisfies Meta<typeof BottomSheet>;
 
-export const Basic = {
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Basic: Story = {
   args: {},
 };

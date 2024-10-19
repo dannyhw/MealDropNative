@@ -1,18 +1,21 @@
-import { getStorybookUI } from "@storybook/react-native";
-import "./doctools";
-import "./storybook.requires";
-import { SafeAreaView, StatusBar } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { view } from "./storybook.requires";
+// import { SafeAreaView, StatusBar } from "react-native";
 
-const StorybookUIRoot = getStorybookUI({
-  enableWebsockets: true,
+const StorybookUIRoot = view.getStorybookUI({
+  enableWebsockets: false,
   onDeviceUI: true,
+  storage: {
+    getItem: AsyncStorage.getItem,
+    setItem: AsyncStorage.setItem,
+  },
 });
 
-const StorybookUI = () => (
-  // <SafeAreaView style={{ flex: 1 }}>
-  // <StatusBar hidden />
-  <StorybookUIRoot />
-  // </SafeAreaView>
-);
+// const StorybookUI = () => (
+//   // <SafeAreaView style={{ flex: 1 }}>
+//   // <StatusBar hidden />
+//   <StorybookUIRoot />
+//   // </SafeAreaView>
+// );
 
-export default StorybookUI;
+export default StorybookUIRoot;

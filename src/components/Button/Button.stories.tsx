@@ -1,8 +1,9 @@
-import type { ComponentMeta, ComponentStoryObj } from "@storybook/react-native";
+import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "./Button";
 import Documentation from "./Documentation.mdx";
+import { Platform } from "react-native";
 
-export default {
+const meta = {
   title: "Button",
   component: Button,
   argTypes: {
@@ -14,22 +15,26 @@ export default {
     round: { control: "boolean" },
   },
   parameters: { flexStart: true, padding: true },
-} as ComponentMeta<typeof Button>;
+} satisfies Meta<typeof Button>;
 
-export const Basic: ComponentStoryObj<typeof Button> = {
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Basic: Story = {
   args: {
     text: "Button",
   },
 };
 
-export const Disabled: ComponentStoryObj<typeof Button> = {
+export const Disabled: Story = {
   args: {
     text: "Button",
     disabled: true,
   },
 };
 
-export const Clear: ComponentStoryObj<typeof Button> = {
+export const Clear: Story = {
   args: {
     text: "Button",
     clear: true,
@@ -38,6 +43,12 @@ export const Clear: ComponentStoryObj<typeof Button> = {
 
 // TODO: icon
 
-export const Docs: ComponentStoryObj<typeof Button> = {
-  render: () => <Documentation />,
+export const Docs: Story = {
+  render: () => {
+    return <Documentation />;
+  },
+  args: { text: "Button" },
+  parameters: {
+    deviceOnly: true,
+  },
 };
