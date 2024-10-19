@@ -1,29 +1,15 @@
 import { StorybookConfig } from "@storybook/react-native-web-vite";
-const path = require("path");
 
-type ServerStorybookConfig = StorybookConfig & {
-  reactNativeServerOptions: { host: string; port: number };
-};
-
-const main: ServerStorybookConfig = {
+const main: StorybookConfig = {
   stories: ["../src/components/**/*.stories.?(ts|tsx|js|jsx)"],
 
-  addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-react-native-server",
-  ],
+  addons: ["@storybook/addon-links", "@storybook/addon-essentials"],
 
   logLevel: "debug",
 
   framework: {
     name: "@storybook/react-native-web-vite",
     options: {},
-  },
-
-  reactNativeServerOptions: {
-    host: "localhost",
-    port: 7007,
   },
 
   docs: {},
