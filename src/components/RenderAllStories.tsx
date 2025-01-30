@@ -11,7 +11,10 @@ export const RenderAllStories = ({
   return (
     <>
       {Object.entries(StoryExports)
-        .filter(([name, storyObj]) => !["default", "Docs"].includes(name))
+        .filter(
+          ([name, storyObj]) =>
+            !["default", "Docs", "__namedExportsOrder"].includes(name),
+        )
         .map(([name, storyObj]) => (
           <View key={name} style={{ marginBottom: 16 }}>
             <Text style={{ marginBottom: 8, fontSize: 16, fontWeight: "bold" }}>
